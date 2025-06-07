@@ -1,11 +1,16 @@
-productos = []  # la lista de productos
-
 # funcion para validar el nombre de la categoria y del producto
 
 
 def validation_name(entrada, campo="el Texto", min=3, max=30):
     """
     Valida que la entrada sea un texto no vacío, con una longitud mínima y máxima.
+    Args:
+         entrada(str): la entrada es el string se quiere validar
+         campo(str,optional): El nombre del texto a desplegar in el error.defaults es "el Texto"
+         min(str,optional): El numero minimo de caracteres permitidos de la entrada de texto. Defoults es 3
+         max(str,optional): El numero maximo de caracteres permitidos de la entrada de texto. Defaults es 30
+    Returns:
+        bool: True si la entrada es valida sino False. print error mensaje si es invalido
     """
     entrada = entrada.strip()
     if not entrada:
@@ -19,14 +24,20 @@ def validation_name(entrada, campo="el Texto", min=3, max=30):
         return False
     else:
         return True
-# funcion para validar el precio
 
+# funcion para validar el precio
 
 def validation_price(precio, min=0, max=10000000000):
     """
     Valida que el precio sea un número entero positivo y dentro de un rango específico.
+    Args:
+        precio(str): El precio a validar como un string.
+        min(int,optional): El valor mínimo permitido para el precio. Defaults es 0.
+        max(int,optional): El valor máximo permitido para el precio. Defaults es 10000000000.
+    Returns:
+        bool: True si el precio es válido, False en caso contrario. Imprime un mensaje de error si es inválido.
     """
-    if not precio.isdigit():
+    if not isinstance(precio, str) or not precio.isdigit():
         print("Debe ser un número entero.")
         return False
     precio = int(precio)
@@ -34,16 +45,28 @@ def validation_price(precio, min=0, max=10000000000):
         print("No puede ser negativo.")
         return False
     elif precio > max:
-        print("Debe ser menor a mil millones (1 000 000 000).")
+        print(f"Debe ser menor a {max}.")
         return False
     return True
 # funcion para agregar productos
 
-
 def agregar_producto(lista_productos):
     """
-   Agrega un producto a la lista de productos.
-   La lista se pasa como parámetro. Los datos del producto se ingresan por teclado.
+    Agrega un producto a la lista de productos.
+    Solicita al usuario la categoría, nombre y precio del producto.
+    La categoría y el nombre deben ser validados para que no estén vacíos y cumplan con las longitudes mínimas y máximas.
+    El precio debe ser un número entero positivo dentro de un rango específico.
+    Args:
+        lista_productos (list): La lista donde se almacenarán los productos.
+    Returns:
+        None: La función no retorna nada, pero agrega un producto al diccionario de productos.
+    Raises:
+        None: No se esperan excepciones específicas, pero se imprimen mensajes de error si las validaciones fallan.
+    Ejemplo de uso:
+        agregar_producto(productos)
+    Esta función solicita al usuario que ingrese la categoría, nombre y precio de un producto,
+    valida cada entrada y, si son correctas, agrega el producto a la lista de productos.
+    La función imprime un mensaje de éxito al agregar el producto.
     """
     producto = {}  # CORRECTO: se declara un diccionario para el producto
     # Validación categoría
@@ -138,6 +161,7 @@ def eliminar_producto(lista_productos, item_borrar):
     print(f"Producto número {numero} eliminado exitosamente.")
     return True  # Retorno True para indicar que se eliminó un producto correctamente
 
+
 def impresion_respuesta(respuesta):
     """
     Imprime la respuesta en una estructura más visible.
@@ -149,16 +173,20 @@ def impresion_respuesta(respuesta):
     ancho_total = 100  # ancho total del marco
     marco = "!" * ancho_total
     contenidoz = f"| {' '*(ancho_total - 4)} |"
-    contenido = f"| {respuesta.center(ancho_total - 4)} |"  # centrado, restamos 4 por los bordes y espacios
-    
+    # centrado, restamos 4 por los bordes y espacios
+    contenido = f"| {respuesta.center(ancho_total - 4)} |"
+
     print(marco)
     print(contenidoz)
     print(contenido)
     print(contenidoz)
     print(marco)
 
+productos = []  # la lista de productos
+
 # Mensaje de bienvenida
-impresion_respuesta("¡Bienvenidos a ***** SiGePro *****, tu aplicación de gestión de productos!")
+impresion_respuesta(
+    "¡Bienvenidos a ***** SiGePro *****, tu aplicación de gestión de productos!")
 
 
 # Aquí comienza el menú principal

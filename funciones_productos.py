@@ -1,5 +1,8 @@
+# Importamos tipos para listas, diccionarios y para indicar que un valor puede ser de varios tipos
+from typing import List, Dict, Union 
+
 # funcion para validar el nombre de la categoria y del producto
-def validation_name(entrada, campo="el Texto", min=2, max=30):
+def validation_name(entrada:str, campo:str="el Texto", min:str=2, max:str=30)->bool:
     """
     Valida que la entrada sea un texto no vacío, con una longitud mínima y máxima.
     Args:
@@ -32,8 +35,7 @@ def validation_name(entrada, campo="el Texto", min=2, max=30):
 
 # funcion para validar el precio o numero de la entrada
 
-
-def validation_numero(precio, min=0, max=10000000000):
+def validation_numero(precio:str, min:Union[int,float]=0, max:Union[int,float]=10000000000)->bool:
     """
     Valida que el precio sea un número decimal positivo y dentro de un rango específico.
     Args:
@@ -75,8 +77,7 @@ def validation_numero(precio, min=0, max=10000000000):
 
 # funcion para agregar productos
 
-
-def agregar_producto(lista_productos):
+def agregar_producto(lista_productos:List[Dict])-> None:
     """
     Agrega un producto a la lista de productos.
     Solicita al usuario la categoría, nombre y precio del producto.
@@ -140,7 +141,7 @@ def agregar_producto(lista_productos):
 # funcion para ver todos los productos
 
 
-def ver_productos(lista_productos):
+def ver_productos(lista_productos:List[Dict])-> None:
     """
     Muestra todos los productos registrados.
     Args:
@@ -165,9 +166,10 @@ def ver_productos(lista_productos):
     print("---------------------------------------------")
 
 # funcion busqueda de productos
+# **criterios_busqueda: Dict[str, Union[str, float]] significa
+# un diccionario con claves string y valores que pueden ser string o float
 
-
-def buscar_productos(lista_productos, **criterios_abuscar):
+def buscar_productos(lista_productos:List[Dict], **criterios_abuscar:Dict[str, Union[str, float]])->List[Dict]:
     """
     Busca productos en la lista basándose en una cantidad variable de criterios nombrados.
    Args:
@@ -189,7 +191,7 @@ def buscar_productos(lista_productos, **criterios_abuscar):
     Si no se encuentran productos que coincidan con los criterios, se imprimirá un mensaje indicando que no se encontraron resultados.  
 
     """
-    encontrados = []
+    encontrados: List[Dict] = []  # Lista para almacenar productos encontrados
     # Validación de entrada
     if not lista_productos:
         print("No hay productos registrados aun.")
@@ -246,7 +248,7 @@ def buscar_productos(lista_productos, **criterios_abuscar):
 # Función para eliminar productos por número en lista
 
 
-def eliminar_producto(lista_productos, *items_a_borrar):
+def eliminar_producto(lista_productos:List[Dict], *items_a_borrar:Union[int,str])->bool:
     """
     Elimina uno o más productos de la lista de productos por su número de posición en dicha lista.
     Args:
@@ -255,9 +257,9 @@ def eliminar_producto(lista_productos, *items_a_borrar):
     Returns:
         bool: True si se eliminó al menos un producto, False si no se eliminaron productos o si hubo un error.
     """
-    entrada_procesada_str = []
-    productos_eliminados_detalles = []
-    cantidad_eliminados = 0
+    entrada_procesada_str: List[str] = []  # Lista para almacenar entradas procesadas
+    productos_eliminados_detalles: List[Dict] = []  # Lista para almacenar detalles de productos eliminados
+    cantidad_eliminados: int = 0
 
     if not lista_productos:
         print("\nNo hay productos para borrar.\n")
@@ -323,7 +325,7 @@ def eliminar_producto(lista_productos, *items_a_borrar):
         return False
 
 
-def impresion_respuesta(respuesta):
+def impresion_respuesta(respuesta:str)-> None:
     """
     Imprime la respuesta en una estructura más visible.
     Args:

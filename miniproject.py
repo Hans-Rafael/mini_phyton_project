@@ -1,5 +1,5 @@
 # funcion para validar el nombre de la categoria y del producto
-def validation_name(entrada, campo="el Texto", min=2, max=30):  
+def validation_name(entrada, campo="el Texto", min=2, max=30):
     """
     Valida que la entrada sea un texto no vacío, con una longitud mínima y máxima.
     Args:
@@ -24,13 +24,15 @@ def validation_name(entrada, campo="el Texto", min=2, max=30):
     elif not entrada:
         raise ValueError(f"{campo} Debe tener entre {min} y {max} caracteres.")
     elif len(entrada) < min:
-        raise ValueError (f"{campo} Debe tener entre {min} y {max} caracteres.")
+        raise ValueError(f"{campo} Debe tener entre {min} y {max} caracteres.")
     elif len(entrada) > max:
-        raise ValueError (f"{campo} Debe tener entre {min} y {max} caracteres.")
+        raise ValueError(f"{campo} Debe tener entre {min} y {max} caracteres.")
     else:
         return True
 
 # funcion para validar el precio o numero de la entrada
+
+
 def validation_numero(precio, min=0, max=10000000000):
     """
     Valida que el precio sea un número decimal positivo y dentro de un rango específico.
@@ -50,24 +52,30 @@ def validation_numero(precio, min=0, max=10000000000):
     Si el precio es válido, retorna True.
     """
     if not isinstance(precio, str):
-        #print("Debe ser un número decimal positivo.")
-        #return False
+        # print("Debe ser un número decimal positivo.")
+        # return False
         raise TypeError("No es un valor de tipo string")
     if precio.count('.') > 1 or precio.startswith('.') or precio.endswith('.'):
-        #print("Debe ser un número decimal positivo.")
-        #return False
-        raise ValueError ("El valor debe ser un numero positivo con un '.' para indicar decimal")
+        # print("Debe ser un número decimal positivo.")
+        # return False
+        raise ValueError(
+            "El valor debe ser un numero positivo con un '.' para indicar decimal")
     partes = precio.split('.')
     if not all(parte.isdigit() for parte in partes):
-        raise ValueError ("El valor debe ser un numero positivo con un '.' para indicar decimal")
+        raise ValueError(
+            "El valor debe ser un numero positivo con un '.' para indicar decimal")
     precio_float = float(precio)
     if precio_float < min:
-        raise ValueError (f"El valor debe ser un numero positivo con un '.' para indicar decimal entre {min}-{max}")
+        raise ValueError(
+            f"El valor debe ser un numero positivo con un '.' para indicar decimal entre {min}-{max}")
     elif precio_float > max:
-        raise ValueError (f"El valor debe ser un numero positivo con un '.' para indicar decimal entre {min}-{max}")
+        raise ValueError(
+            f"El valor debe ser un numero positivo con un '.' para indicar decimal entre {min}-{max}")
     return True
 
 # funcion para agregar productos
+
+
 def agregar_producto(lista_productos):
     """
     Agrega un producto a la lista de productos.
@@ -89,25 +97,27 @@ def agregar_producto(lista_productos):
     producto = {}  # CORRECTO: se declara un diccionario para el producto
     # Validación categoría
     while True:
-        categoria = input("Por favor, ingresa la categoría del producto: ").lower().strip()
+        categoria = input(
+            "Por favor, ingresa la categoría del producto: ").lower().strip()
         try:
             validation_name(categoria, "La categoría")
             producto["categoria"] = categoria
             break  # Si la validación es exitosa, se sale del bucle
         except ValueError as e:
             print(f"Error: {e}. Por favor, inténtalo de nuevo.")
-            continue ## Vuelve a pedir la categoría
+            continue  # Vuelve a pedir la categoría
         except TypeError as e:
             print(f"Error: {e}. Por favor, inténtalo de nuevo.")
             continue
     # Validación nombre
     while True:
-        nombre = input("Por favor, ingresa el nombre del producto: ").strip().lower()
+        nombre = input(
+            "Por favor, ingresa el nombre del producto: ").strip().lower()
         try:
             validation_name(nombre, "El nombre")
             producto["nombre"] = nombre
             break
-        except (TypeError,ValueError) as e:
+        except (TypeError, ValueError) as e:
             print(f"Error: {e} Por favor, inténtalo de nuevo.")
             continue
     # Validación precio
@@ -117,8 +127,8 @@ def agregar_producto(lista_productos):
         try:
             validation_numero(precio_str)
             producto["precio"] = float(precio_str)
-            break        
-        except (TypeError,ValueError) as e:
+            break
+        except (TypeError, ValueError) as e:
             print(f"Error: {e} Por favor, inténtalo de nuevo.")
             continue
 
@@ -128,6 +138,8 @@ def agregar_producto(lista_productos):
         f"Producto '{nombre}' de categoría '{categoria}' al precio de ${precio_str} agregado exitosamente.\n")
 
 # funcion para ver todos los productos
+
+
 def ver_productos(lista_productos):
     """
     Muestra todos los productos registrados.
@@ -153,6 +165,8 @@ def ver_productos(lista_productos):
     print("---------------------------------------------")
 
 # funcion busqueda de productos
+
+
 def buscar_productos(lista_productos, **criterios_abuscar):
     """
     Busca productos en la lista basándose en una cantidad variable de criterios nombrados.
@@ -161,8 +175,12 @@ def buscar_productos(lista_productos, **criterios_abuscar):
         **criterios_abuscar (str): Criterios de búsqueda como nombre o categoría.
     Returns:
         encontrados: lista de productos encontrados que coinciden con los criterios de búsqueda.
+
     Raises:
-        None: No se esperan excepciones específicas, pero se imprimen mensajes de error si las validaciones fallan.
+        None: No se esperan excepciones específicas, pero se imprime un mensaje si no hay productos registrados.
+    Prints:
+        - Los productos encontrados que coinciden con los criterios de búsqueda.
+        - Un mensaje si no se encontraron productos que coincidan con los criterios.
     Ejemplo de uso:
         buscar_productos(productos, nombre='camisa', categoria='ropa')
     Esta función permite buscar productos en la lista de productos utilizando uno o más criterios de búsqueda.
@@ -175,20 +193,21 @@ def buscar_productos(lista_productos, **criterios_abuscar):
     # Validación de entrada
     if not lista_productos:
         print("No hay productos registrados aun.")
-        return []# sin productos retorno una lista vacia
+        return []  # sin productos retorno una lista vacia
     # Búsqueda de productos donde producto es un diccionario
-    for producto in lista_productos: 
+    for producto in lista_productos:
         coincide_criterio = True
-        for criterio, valor in criterios_abuscar.items(): #recorre la lista de tuplas ejemplo: ('nombre', 'camisa'), ('categoria', 'ropa')
-            # Manejo especial para un término de búsqueda general 
+        # recorre la lista de tuplas ejemplo: ('nombre', 'camisa'), ('categoria', 'ropa')
+        for criterio, valor in criterios_abuscar.items():
+            # Manejo especial para un término de búsqueda general
             if criterio == 'termino':
-                if not (valor.lower()in producto.get('nombre', '').lower() or
+                if not (valor.lower() in producto.get('nombre', '').lower() or
                         valor.lower() in producto.get('categoria', '').lower()):
                     coincide_criterio = False
-                    break # Si no coincide, salimos del bucle y pasa al siguiente producto
-            #manejo de criterios de precios(ej. precio_maximo, precio_minimo)
+                    break  # Si no coincide, salimos del bucle y pasa al siguiente producto
+            # manejo de criterios de precios(ej. precio_maximo, precio_minimo)
             elif criterio == 'precio_maximo':
-                if producto.get('precio',float('inf')) > valor:
+                if producto.get('precio', float('inf')) > valor:
                     coincide_criterio = False
                     break
             elif criterio == 'precio_minimo':
@@ -197,32 +216,36 @@ def buscar_productos(lista_productos, **criterios_abuscar):
                     break
             # Manejo de otros criterios específicos como nombre y categoría si no son el termino general
             else:
-                #Compruebo si el atributo existe en el producto y si coincide con el valor buscado
+                # Compruebo si el atributo existe en el producto y si coincide con el valor buscado
                 if criterio in producto:
                     if isinstance(producto[criterio], str):
                         if valor.lower() not in producto[criterio].lower():
                             coincide_criterio = False
                             break
-                    else:#para otros tipos de datos, comparacion exacta
+                    else:  # para otros tipos de datos, comparacion exacta
                         if producto[criterio] != valor:
                             coincide_criterio = False
                             break
-                else: # el criterio de busqueda no existe en el producto
+                else:  # el criterio de busqueda no existe en el producto
                     coincide_criterio = False
                     break
         if coincide_criterio:
             encontrados.append(producto)
     # Imprimir resultados
     if encontrados:
-                print(f"\n--- Resultados de búsqueda ---")
-                for id, producto in enumerate(encontrados, start=1):
-                    print(f"{id} . Nombre: {producto['nombre']}, Categoría: {producto['categoria']}, Precio: ${producto['precio']}")
-                print("----------------------------------------\n")
+        print(f"\n--- Resultados de búsqueda ---")
+        for id, producto in enumerate(encontrados, start=1):
+            print(
+                f"{id} . Nombre: {producto['nombre']}, Categoría: {producto['categoria']}, Precio: ${producto['precio']}")
+        print("----------------------------------------\n")
     else:
-        print(f"\nNo se encontraron productos para los criterios: {criterios_abuscar}.\n")
+        print(
+            f"\nNo se encontraron productos para los criterios: {criterios_abuscar}.\n")
 
 # funcion para eliminar productos por numero en lista
 # Función para eliminar productos por número en lista
+
+
 def eliminar_producto(lista_productos, *items_a_borrar):
     """
     Elimina uno o más productos de la lista de productos por su número de posición en dicha lista.
@@ -233,68 +256,72 @@ def eliminar_producto(lista_productos, *items_a_borrar):
         bool: True si se eliminó al menos un producto, False si no se eliminaron productos o si hubo un error.
     """
     entrada_procesada_str = []
-    productos_eliminados_detalles = [] 
+    productos_eliminados_detalles = []
     cantidad_eliminados = 0
-    
+
     if not lista_productos:
         print("\nNo hay productos para borrar.\n")
         return False
-    
+
     if not items_a_borrar:
         print("\nNo se especificó ningún producto para eliminar.\n")
         return False
-    
-    # --- CORRECCIÓN CLAVE AQUÍ: Usamos un SET para evitar duplicados y para el método .add() ---
-    numeros_a_eliminar = set() 
-    # --- FIN CORRECCIÓN CLAVE ---
+
+    # --- SET para evitar duplicados y para el método .add() ---
+    numeros_a_eliminar = set()
 
     rango_max_lista = len(lista_productos)
 
     # Paso 1: Normalizar la entrada a una lista de strings de números individuales
     if len(items_a_borrar) == 1 and isinstance(items_a_borrar[0], str) and ',' in items_a_borrar[0]:
-        entrada_procesada_str = [parte.strip() for parte in items_a_borrar[0].split(',')]
+        entrada_procesada_str = [parte.strip()
+                                 for parte in items_a_borrar[0].split(',')]
     else:
         entrada_procesada_str = [str(item) for item in items_a_borrar]
-    
+
     # Paso 2: Validar y convertir cada string individual a entero
     hay_errores_validacion = False
     for item_str in entrada_procesada_str:
         # Aquí, validation_numero se usa para un SOLO STRING NUMÉRICO y valida el rango
         try:
             if validation_numero(item_str, 1, rango_max_lista):
-                numeros_a_eliminar.add(int(item_str)) # --- Uso .add() para el set ---
+                # --- Uso .add() para el set ---
+                numeros_a_eliminar.add(int(item_str))
         except (TypeError, ValueError) as e:
-            print(f"Error al procesar '{item_str}': {e}. Debe ser un número entero entre 1 y {rango_max_lista}.")
-            hay_errores_validacion = True # Si hay un error de validación, lo marcamos
-            continue # Continuamos con el siguiente elemento
+            print(
+                f"Error al procesar '{item_str}': {e}. Debe ser un número entero entre 1 y {rango_max_lista}.")
+            hay_errores_validacion = True  # Si hay un error de validación, lo marcamos
+            continue  # Continuamos con el siguiente elemento
     if hay_errores_validacion:
         print("\nNo se pudo completar la eliminación debido a entradas inválidas.\n")
-        return False # Si algo no es válido, salimos de la función sin eliminar
-    
-    if not numeros_a_eliminar: # Si después de la validación no quedaron números válidos
+        return False  # Si algo no es válido, salimos de la función sin eliminar
+
+    if not numeros_a_eliminar:  # Si después de la validación no quedaron números válidos
         print("\nNo se especificaron números de producto válidos para eliminar.\n")
         return False
 
     # Paso 3: Ordenar los números de mayor a menor para eliminar sin afectar índices
     numeros_a_eliminar_sorted = sorted(list(numeros_a_eliminar), reverse=True)
-    
-    
+
     for numero_idx in numeros_a_eliminar_sorted:
         try:
             producto_eliminado = lista_productos.pop(numero_idx - 1)
             productos_eliminados_detalles.append(producto_eliminado)
             cantidad_eliminados += 1
         except IndexError:
-            print(f"Advertencia: No se pudo eliminar el producto número {numero_idx}. (Índice fuera de rango inesperado).")
+            print(
+                f"Advertencia: No se pudo eliminar el producto número {numero_idx}. (Índice fuera de rango inesperado).")
 
     if cantidad_eliminados > 0:
         print(f"{cantidad_eliminados} producto(s) eliminado(s) con éxito.")
         for prod_det in productos_eliminados_detalles:
-            print(f"  - Eliminado: {prod_det['nombre']} ({prod_det['categoria']}, ${prod_det['precio']:.2f})")
+            print(
+                f"  - Eliminado: {prod_det['nombre']} ({prod_det['categoria']}, ${prod_det['precio']:.2f})")
         return True
     else:
         print("\nNo se eliminó ningún producto válido.\n")
         return False
+
 
 def impresion_respuesta(respuesta):
     """
@@ -325,112 +352,129 @@ def impresion_respuesta(respuesta):
     print(linea_espaciada)
     print(marco)
 
-productos = []  # la lista de productos
-criterios = {} # Diccionario para almacenar criterios de búsqueda
-# Mensaje de bienvenida
-impresion_respuesta("¡Bienvenidos a ***** SiGePro *****, tu aplicación de gestión de productos!")
+# ### Función Principal del Programa (`main()`)
 
-# Aquí comienza el menú principal
-while True:  # Menú Principal
-    print("\n--- MENÚ PRINCIPAL ---")
-    print("1. Agregar producto")
-    print("2. Visualizar productos")
-    print("3. Buscar productos")
-    print("4. Eliminar producto")
-    print("5. Salir")
-    print("----------------------")
 
-    opcion = input("Selecciona una opción: ").strip()
+def main():
+    # Lista para almacenar los productos
+    productos = []
 
-    # agrego productos
-    if opcion == "1":
-        print("\n--- Registrando Productos ---")
-        while True:
-            # Validación de entrada para agregar un producto
-            agregar_producto(productos)
-            # Continuar agregando productos
-            continuar = input("¿Deseas agregar otro producto? (s/n): ").lower()
-            if continuar != 's':
-                break
+    # Mensaje de bienvenida
+    impresion_respuesta(
+        "¡Bienvenidos a ***** SiGePro *****, tu aplicación de gestión de productos!")
+    # menu del programa(Bucle pirncipal)
+    while True:
+        print("\n--- MENÚ PRINCIPAL ---")
+        print("1. Agregar producto")
+        print("2. Visualizar productos")
+        print("3. Buscar productos")
+        print("4. Eliminar producto")
+        print("5. Salir")
+        print("----------------------")
 
-    # aqui muestro los productos registrados
-    elif opcion == "2":
-        print("\n--- Productos Registrados ---")
-        ver_productos(productos)
-        input("precione una tecla para continuar")
+        opcion = input("Selecciona una opción: ").strip()
 
-# Búsqueda del producto
-    elif opcion == "3":
-        print("\n--- BÚSQUEDA DE PRODUCTOS ---")
-        while True:
-            busqueda = input(
-                "Ingresa el nombre o categoría a buscar menor a 30 caracteres (dejar vacío para omitir): ").strip().lower()
-            # Validación de entrada para la búsqueda
-            if len(busqueda) > 30:
-                print("El término de búsqueda debe tener menos de 30 caracteres.")
-                continue
-            if busqueda:
-                # Si hay un término de búsqueda, lo agrego al diccionario de criterios
-                criterios['termino'] = busqueda
-            #cirterios de precio maximo y minimo
-            precio_maximo = input(
-                "Ingresa el precio máximo a buscar (dejar vacío para omitir): ").strip()
-            #valido sea un numero entero
-            try:
-                if validation_numero(precio_maximo) and precio_maximo != "":
-                    criterios['precio_maximo'] = float(precio_maximo)
-            except (ValueError,TypeError)as e:
-                print(f"Error: {e}. El precio máximo debe ser un número positivo, intentelo de nuevo")
-           #criterio para precio minimo
-            precio_minimo = input(
-                "Ingresa el precio mínimo a buscar (dejar vacío para omitir): ").strip()
-            #valido sea un numero decimal
-            try:
-                if validation_numero(precio_minimo) and precio_minimo != "":
-                    criterios['precio_minimo'] = float(precio_minimo)
-                    break
-            except (TypeError,ValueError,Exception) as e:
-                print(f"Error: {e}, El precio mínimo debe ser un número positivo, intentelo de nuevo")
-                continue
-            if not criterios:
-                print("No se ingresaron criterios de búsqueda. Volviendo al menú.")
-                continue # Volver al inicio del bucle del menú
-            # Realizo la búsqueda de productos
-            impresion_respuesta(f"Buscando productos con los criterios: {criterios}")
-            # Llamo a la función de búsqueda con los criterios
-            buscar_productos(productos, **criterios)
-            # Limpio los criterios para la próxima búsqueda
-            criterios.clear()
-            # Pregunto al usuario si desea volver a buscar
-            continuar = input(
-                "¿Deseas buscar otro producto? (s/n): ").strip().lower()
-            if continuar != 's':
-                print("Saliendo de la búsqueda de productos.")
-                break
-        
-    # Borrado de productos
-    elif opcion == "4":
-        print("\n--- Borrado del PRODUCTO por NÚMERO DE POSICIÓN ---")
-        while True:
-            ver_productos(productos)#ver los productos actuales
-            item_borrar = input("Ingresa el número(s) de los productos a borrar (ej: 1 o 2,3,4). Usa comas para eliminar varios productos o '-x' para volver al menú: :").strip().lower()
-            if item_borrar == "-x":
-                print("Saliendo de la eliminación de producto.")
-                break
-            elif input(f"¿Seguro que deseas eliminar los productos número {item_borrar} ?  (s/n): ").strip().lower() != 's':
-                print("Eliminación cancelada.")
-                continue
-            elif eliminar_producto(productos, item_borrar):
+        # agrego productos
+        if opcion == "1":
+            print("\n--- Registrando Productos ---")
+            while True:
+                # Validación de entrada para agregar un producto
+                agregar_producto(productos)
+                # Continuar agregando productos
                 continuar = input(
-                    "¿Deseas eliminar otro producto? (s/n): ").strip().lower()
+                    "¿Deseas agregar otro producto? (s/n): ").lower()
                 if continuar != 's':
+                    break
+
+        # aqui muestro los productos registrados
+        elif opcion == "2":
+            print("\n--- Productos Registrados ---")
+            ver_productos(productos)
+            input("precione una tecla para continuar")
+
+    # Búsqueda del producto
+        elif opcion == "3":
+            print("\n--- BÚSQUEDA DE PRODUCTOS ---")
+            while True:
+                criterios = {}  # Diccionario para almacenar criterios de búsqueda
+                busqueda = input(
+                    "Ingresa el nombre o categoría a buscar menor a 30 caracteres (dejar vacío para omitir): ").strip().lower()
+                # Validación de entrada para la búsqueda
+                if len(busqueda) > 30:
+                    print("El término de búsqueda debe tener menos de 30 caracteres.")
+                    continue
+                if busqueda:
+                    # Si hay un término de búsqueda, lo agrego al diccionario de criterios
+                    criterios['termino'] = busqueda
+                # cirterios de precio maximo y minimo
+                precio_maximo = input(
+                    "Ingresa el precio máximo a buscar (dejar vacío para omitir): ").strip()
+                # valido sea un numero entero
+                try:
+                    if validation_numero(precio_maximo) and precio_maximo != "":
+                        criterios['precio_maximo'] = float(precio_maximo)
+                except (ValueError, TypeError)as e:
+                    print(
+                        f"Error: {e}. El precio máximo debe ser un número positivo, intentelo de nuevo")
+            # criterio para precio minimo
+                precio_minimo = input(
+                    "Ingresa el precio mínimo a buscar (dejar vacío para omitir): ").strip()
+                # valido sea un numero decimal
+                try:
+                    if validation_numero(precio_minimo) and precio_minimo != "":
+                        criterios['precio_minimo'] = float(precio_minimo)
+                        break
+                except (TypeError, ValueError, Exception) as e:
+                    print(
+                        f"Error: {e}, El precio mínimo debe ser un número positivo, intentelo de nuevo")
+                    continue
+                if not criterios:
+                    print("No se ingresaron criterios de búsqueda. Volviendo al menú.")
+                    continue  # Volver al inicio del bucle del menú
+                # Realizo la búsqueda de productos
+                impresion_respuesta(
+                    f"Buscando productos con los criterios: {criterios}")
+                # Llamo a la función de búsqueda con los criterios
+                buscar_productos(productos, **criterios)
+                # Limpio los criterios para la próxima búsqueda
+                criterios.clear()
+                # Pregunto al usuario si desea volver a buscar
+                continuar = input(
+                    "¿Deseas buscar otro producto? (s/n): ").strip().lower()
+                if continuar != 's':
+                    print("Saliendo de la búsqueda de productos.")
+                    break
+
+        # Borrado de productos
+        elif opcion == "4":
+            print("\n--- Borrado del PRODUCTO por NÚMERO DE POSICIÓN ---")
+            while True:
+                ver_productos(productos)  # ver los productos actuales
+                item_borrar = input(
+                    "Ingresa el número(s) de los productos a borrar (ej: 1 o 2,3,4). Usa comas para eliminar varios productos o '-x' para volver al menú: :").strip().lower()
+                if item_borrar == "-x":
                     print("Saliendo de la eliminación de producto.")
                     break
-    # Salir del programa
-    elif opcion == "5":
-        impresion_respuesta("¡Gracias por usar SiGePro!")
-        break
-    else:
-        impresion_respuesta("Opción inválida. Por favor, elige entre 1 y 5.")
-        continue
-# Fin del programa
+                elif input(f"¿Seguro que deseas eliminar los productos número {item_borrar} ?  (s/n): ").strip().lower() != 's':
+                    print("Eliminación cancelada.")
+                    continue
+                elif eliminar_producto(productos, item_borrar):
+                    continuar = input(
+                        "¿Deseas eliminar otro producto? (s/n): ").strip().lower()
+                    if continuar != 's':
+                        print("Saliendo de la eliminación de producto.")
+                        break
+        # Salir del programa
+        elif opcion == "5":
+            impresion_respuesta("¡Gracias por usar SiGePro!")
+            break
+        else:
+            impresion_respuesta(
+                "Opción inválida. Por favor, elige entre 1 y 5.")
+            continue
+
+        # Fin del programa
+# print(">>> Intentando llamar a la función main() <<<") # Línea de depuración
+    # mandatorio
+if __name__ == "__main__":  # verifica si el script se está ejecutando directamente
+    main()

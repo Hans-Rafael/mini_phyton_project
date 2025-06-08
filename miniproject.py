@@ -1,3 +1,6 @@
+# Importamos tipos para listas, diccionarios y para indicar que un valor puede ser de varios tipos
+from typing import List, Dict, Union
+
 from funciones_productos import(
     validation_numero,
     agregar_producto,
@@ -12,9 +15,9 @@ from funciones_productos import(
 ## fp.agregar_producto(productos)
 
 # ### Función Principal del Programa (`main()`)
-def main():
+def main()-> None:
     # Lista para almacenar los productos
-    productos = []
+    productos:List[Dict] = []
 
     # Mensaje de bienvenida
     impresion_respuesta(

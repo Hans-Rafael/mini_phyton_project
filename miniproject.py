@@ -7,7 +7,8 @@ from funciones_productos import(
     ver_productos,
     buscar_productos,
     eliminar_producto,
-    impresion_respuesta
+    impresion_respuesta,
+    estructurar_error_mensaje
 )
 #Si quiero importar todas las funciones puedo hacerlo asi:
 #  import funciones_productos as fp
@@ -74,8 +75,7 @@ def main()-> None:
                     if validation_numero(precio_maximo) and precio_maximo != "":
                         criterios['precio_maximo'] = float(precio_maximo)
                 except (ValueError, TypeError)as e:
-                    print(
-                        f"Error: {e}. El precio máximo debe ser un número positivo, intentelo de nuevo")
+                    print(estructurar_error_mensaje(e))
             # criterio para precio minimo
                 precio_minimo = input(
                     "Ingresa el precio mínimo a buscar (dejar vacío para omitir): ").strip()
@@ -85,8 +85,7 @@ def main()-> None:
                         criterios['precio_minimo'] = float(precio_minimo)
                         break
                 except (TypeError, ValueError, Exception) as e:
-                    print(
-                        f"Error: {e}, El precio mínimo debe ser un número positivo, intentelo de nuevo")
+                    print(estructurar_error_mensaje(e))
                     continue
                 if not criterios:
                     print("No se ingresaron criterios de búsqueda. Volviendo al menú.")

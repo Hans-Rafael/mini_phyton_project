@@ -324,7 +324,7 @@ def eliminar_producto(lista_productos:List[Dict], *items_a_borrar:Union[int,str]
         print("\nNo se eliminó ningún producto válido.\n")
         return False
 
-
+# función para imprimir la respuesta de una operación bien estructurada
 def impresion_respuesta(respuesta:str)-> None:
     """
     Imprime la respuesta en una estructura más visible.
@@ -353,3 +353,20 @@ def impresion_respuesta(respuesta:str)-> None:
     print(contenido)
     print(linea_espaciada)
     print(marco)
+
+# función para estructurar un mensaje de error ya que es repetitivo al frontend
+def estructurar_error_mensaje(e: Exception)-> str:
+    """
+    Estructura un mensaje de error para una excepción dada.
+    Args:
+        e (Exception): La excepción que se desea estructurar.
+    Returns:
+        str: Un mensaje de error estructurado.
+  Ejemplo de uso:
+        try:
+            # Código que puede lanzar una excepción
+        except Exception as e:
+            print(estructurar_error_mensaje(e))
+    Esta función toma una excepción y devuelve un mensaje de error estructurado para su impresión.   
+    """
+    return f"Error: {str(e)}, por favor inténtelo de nuevo"

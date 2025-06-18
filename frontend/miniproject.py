@@ -76,6 +76,9 @@ def main()-> None:
                         criterios['precio_maximo'] = float(precio_maximo)
                 except (ValueError, TypeError)as e:
                     print(estructurar_error_mensaje(e))
+                except Exception as e:
+                  # Manejo genérico para cualquier otro error
+                    print(f"Ocurrió un error inesperado: {e}")
             # criterio para precio minimo
                 precio_minimo = input(
                     "Ingresa el precio mínimo a buscar (dejar vacío para omitir): ").strip()
@@ -84,9 +87,12 @@ def main()-> None:
                     if validation_numero(precio_minimo) and precio_minimo != "":
                         criterios['precio_minimo'] = float(precio_minimo)
                         break
-                except (TypeError, ValueError, Exception) as e:
+                except (TypeError, ValueError) as e:
                     print(estructurar_error_mensaje(e))
                     continue
+                except Exception as e:
+                  # Manejo genérico para cualquier otro error
+                    print(f"Ocurrió un error inesperado: {e}")
                 if not criterios:
                     print("No se ingresaron criterios de búsqueda. Volviendo al menú.")
                     continue  # Volver al inicio del bucle del menú

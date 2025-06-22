@@ -1,5 +1,4 @@
 # Importamos tipos para listas, diccionarios y para indicar que un valor puede ser de varios tipos
-from typing import List, Dict, Union
 
 #validar texto
 def validar_texto(n: str) -> bool:
@@ -45,3 +44,42 @@ def validar_correo(e:str)-> bool:
         raise ValueError (f"el correo {e} no es valido")
     else:
         return True
+    #registrar nuevo cliente
+def registrar_nuevo_cliente(name:str,surname:str,email:str,archivo:str)->None:
+    """
+    Registra al cliente dentro del archivo dado
+    Args:
+        name (str): Nombre del cliente.
+        surname (str): Apellido del cliente.
+        email (str): Correo electrónico del cliente.
+        archivo (str): Ruta del archivo donde se guardará el registro.
+    Returns:
+        None
+    Raises:
+        Exception: Si ocurre un error al abrir o escribir en el archivo.
+    """
+    try:
+        file= open(archivo, "a")
+        file.write(f"{name},{surname},{email}\n")
+        file.close()
+        print("***** Cliente registrado exitosamente.*****")
+    except (Exception) as e:
+        print(f"Error al registrar cliente: {e}")
+    #imprimir registro actual
+def imprimir_registro_clientes(archivo:str):
+    """
+    Imprime el registro de clientes desde el archivo especificado.
+    Args:
+        archivo (str): Ruta del archivo que contiene el registro de clientes.
+    Returns:
+        None
+    Raises:
+        Exception: Si ocurre un error al abrir o leer el archivo."""
+    try:
+        print("Registro de clientes:\n")
+        file = open ("clientes.txt", "r")
+        lineas = file.readlines()
+        for line in lineas:
+            print(line.strip())
+    except (Exception) as e:
+        print(f"Tenemos un error y es: {e}")

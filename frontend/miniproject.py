@@ -1,5 +1,5 @@
 # Importamos tipos para listas, diccionarios y para indicar que un valor puede ser de varios tipos
-from typing import List, Dict, Union
+from typing import List, Dict
 
 from backend.funciones_productos import(
     validation_numero,
@@ -53,7 +53,7 @@ def main()-> None:
             ver_productos(productos)
             input("precione una tecla para continuar")
 
-    # Búsqueda del producto
+        # Búsqueda del producto
         elif opcion == "3":
             print("\n--- BÚSQUEDA DE PRODUCTOS ---")
             while True:
@@ -139,7 +139,7 @@ def main()-> None:
             continue
 
         # Fin del programa
-# print(">>> Intentando llamar a la función main() <<<") # Línea de depuración
-    # mandatorio
+     # print(">>> Intentando llamar a la función main() <<<") # Línea de depuración
+      # mandatorio
 if __name__ == "__main__":  # verifica si el script se está ejecutando directamente
     main()

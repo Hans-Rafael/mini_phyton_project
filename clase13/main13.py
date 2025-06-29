@@ -15,8 +15,12 @@ try:
                        precio REAL NOT NULL
                    )
                    """)
+    
     # solucito productos
     while True:
+        continuar = input("¿Desea continuar con la carga de productos? (s/n): ").lower().strip()
+        if continuar != 's':
+            break
         nombre_producto = input(
             "Ingrese el nombre del producto: ").lower().strip()
         precio_producto = float(input("Ingrese el precio del producto: "))
@@ -47,6 +51,7 @@ try:
             #me traigo toda la info de la db
             cursor.execute('SELECT * FROM productos')
             productos = cursor.fetchall()
+            print(f"{'======= Lista de Productos =======':^40}")
             for producto in productos:
                 print(f"ID: {producto[0]}, nombre: {producto[1]}, Precio {producto[2]:.2f}")
             pregunta = input("desea salir s/n?")
@@ -56,8 +61,12 @@ try:
             name = input("ingrese el nombre del producto que busca: ").lower().strip()
             cursor.execute('SELECT nombre FROM productos WHERE nombre LIKE ?', (name + '%',))
             productos = cursor.fetchall()
+            if len(productos) == 0:
+                print("No se encontraron productos con ese nombre.")
             for producto in productos:
-                print(f"nombre: {producto[0]}")
+                print(f"nombre: {producto[0]}, Precio {producto[1]:.2f}")
+                
+            # Pregunta si desea salir
             pregunta = input("desea salir s/n?")
             if pregunta == "s":
                 break
@@ -65,8 +74,10 @@ try:
             cantidad = float(input("Valor del precio de los productosdesea buscar:").strip())
             cursor.execute('SELECT * FROM productos WHERE precio = ?', (cantidad,))
             productos = cursor.fetchall()
+            if len(productos) == 0:
+                print("No se encontraron productos con ese nombre.")
             for producto in productos:
-                print(f"ID: {producto[0]}, nombre: {producto[1]}, Precio {producto[2]:.2f}")
+                print(f"ID: {producto[0]}, Precio {producto[2]:.2f}, nombre: {producto[1]}")
             pregunta = input("desea salir s/n?")
             if pregunta == "s":
                 break

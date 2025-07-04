@@ -1,4 +1,18 @@
 # Importamos tipos para listas, diccionarios y para indicar que un valor puede ser de varios tipos
+import os
+#funcion para limpiar la pantalla
+def limpiar_pantalla():
+    os.system('cls' if os.name == 'nt' else 'clear')
+# pausa para que el usuario pueda ver lo que se muestra en pantalla
+def pausa():
+    os.system('pause' if os.name == 'nt' else 'read -e -n 1 -p "Presione una tecla para continuar..."')
+    return None
+#funcion pausa mas simple y entendible para mac y linux y funcional con windows
+def pausa():
+    if os.name == 'nt':
+        os.system('pause')
+    else:
+        input("Presione Enter para continuar...")
 
 #validar texto
 def validar_texto(n: str) -> bool:

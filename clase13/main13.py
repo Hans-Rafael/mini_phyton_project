@@ -3,6 +3,11 @@ import sqlite3
 # Esta linea es para ubicar python en el directorio actual
 os.chdir(os.path.dirname(__file__))
 
+#Funcion para limpiar la pantalla Recordar va con import os
+def limpiar_pantalla():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    return None
+
 try:
     conection = sqlite3.connect("productos.db")
     print("Conexión establecida exitosamente.")
@@ -40,6 +45,7 @@ try:
     print("valores agregados a la database")
     #menu de lectura de valores
     while True:
+        limpiar_pantalla() # limpia la pantalla y genera efecto visual siempre abierto
         print("\nSeleccione una opción:")
         print("====================================")
         print("1. Ver todos los productos")

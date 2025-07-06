@@ -6,13 +6,13 @@
 
 ---
 
-## 🧾 Descripción
+## Descripción
 
 **SiGePro** es una aplicación de consola desarrollada en Python que permite gestionar productos mediante una base de datos SQLite. Es ideal para pequeños negocios, estudiantes o usuarios que necesiten llevar el control básico de su inventario de productos.
 
 ---
 
-## ⚙️ Funcionalidades
+## Funcionalidades
 
 - Registrar nuevos productos.
 - Visualizar todos los productos almacenados.
@@ -23,14 +23,14 @@
 
 ---
 
-## 💻 Requisitos
+## Requisitos
 
 - Python 3.7 o superior
 - Sistema operativo: Linux, Windows o macOS
 
 ---
 
-## 🚀 Cómo ejecutar
+## Cómo ejecutar
 
 1. Cloná o descargá este repositorio.
 2. Abrí una terminal y ubicáte en la carpeta del proyecto.

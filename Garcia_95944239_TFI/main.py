@@ -16,6 +16,7 @@ from mod_backend import (
 
 from mod_frontend import menu, imprime_tabla, pausa, limpiar_pantalla, sub_menu
 
+
 def main():
     # Esta linea es para ubicar python en el directorio actual
     # Configuración inicial para el funcionamiento de la aplicación.
@@ -69,19 +70,25 @@ def main():
                 limpiar_pantalla()
                 if respuesta != "s":
                     break
-                
+
         # === OPCIÓN 2: Ver registros ===
         elif menu_opcion == "2":
-            productos=ver_registro_db(db, tbl)
-            imprime_tabla(productos)
+            # guardo como productos de la base de datos
+            productos = ver_registro_db(db, tbl)
+            # Verifico si hay productos registrados
+            if not productos:
+                print("La base de datos está vacía. No hay productos registrados.")
+            else:
+                imprime_tabla(productos)
             pausa()
-            
+
         # === OPCIÓN 3:  Actualizar datos del producto por su ID ===
         elif menu_opcion == "3":
             while True:
                 pk = input("Ingrese el ID del producto a modificar: ").strip()
                 if not validar_entero_positivo(pk):
-                    print("El ID debe ser un número entero positivo. Intente nuevamente.")
+                    print(
+                        "El ID debe ser un número entero positivo. Intente nuevamente.")
                     pausa()
                     continue
                 # Submenú para elegir qué campo modificar
@@ -92,9 +99,11 @@ def main():
                     "4": "precio",
                     "5": "categoria"
                 }
-                campo_key = sub_menu("Seleccione el campo a modificar", campos_opciones)
-                campo = campos_opciones[campo_key]  # Extraigo el nombre del campo real
-        
+                campo_key = sub_menu(
+                    "Seleccione el campo a modificar", campos_opciones)
+                # Extraigo el nombre del campo real
+                campo = campos_opciones[campo_key]
+
                 while True:
                     if campo == "cantidad":
                         valor = input("Ingrese la nueva cantidad: ").strip()
@@ -102,30 +111,35 @@ def main():
                             print("La cantidad debe ser un número entero positivo.")
                             pausa()
                             continue
-        
+
                     elif campo == "precio":
                         valor = input("Ingrese el nuevo precio: $").strip()
                         if not validar_float_positivo(valor):
                             print("El precio debe ser un número real positivo.")
                             pausa()
                             continue
-        
+
                     else:  # campos string
-                        valor = input(f"Ingrese el nuevo valor para '{campo}': ").strip()
+                        valor = input(
+                            f"Ingrese el nuevo valor para '{campo}': ").strip()
                         if not validar_string(valor):
-                            print(f"El valor ingresado para {campo} no es válido.")
+                            print(
+                                f"El valor ingresado para {campo} no es válido.")
                             pausa()
                             continue
-        
+
                     # Si llegó aquí, es porque el valor es válido
                     actualizar_informacion(db, tbl, pk, campo, valor)
-                    print(f"El campo '{campo}' del producto #{pk} ha sido actualizado a: {valor}")
-                    #pausa()
+                    print(
+                        f"El campo '{campo}' del producto #{pk} ha sido actualizado a: {valor}")
+                    # pausa()
                     # Pregunto si desea modificar otro campo del mismo producto
-                    otra_modificacion = input("¿Desea modificar otro campo de este producto? (s/n): ").strip().lower()
+                    otra_modificacion = input(
+                        "¿Desea modificar otro campo de este producto? (s/n): ").strip().lower()
                     if otra_modificacion == "s":
                         # Si elige "s", vuelvo a pedir el campo a modificar
-                        campo_key = sub_menu("Seleccione el campo a modificar", campos_opciones)
+                        campo_key = sub_menu(
+                            "Seleccione el campo a modificar", campos_opciones)
                         campo = campos_opciones[campo_key]
                     else:
                         # Si elige otra cosa, salgo del bucle de campos
@@ -133,7 +147,8 @@ def main():
                         pausa()
                         break
                 # Pregunto si desea modificar otro producto
-                otro_producto = input("¿Desea modificar otro producto? (s/n): ").strip().lower()
+                otro_producto = input(
+                    "¿Desea modificar otro producto? (s/n): ").strip().lower()
                 if otro_producto != "s":
                     break  # salgo del while general
 
@@ -154,12 +169,13 @@ def main():
             else:
                 pausa()
                 continue
-            
+
         # === OPCIÓN 5: Busqueda de producto por Id, nombre o categoria ===
         elif menu_opcion == "5":
             while True:
-                #campo = input(f"{'=='*25}\ningrese por que campo desea buscar: \n1. ID\n2. Categoria\n3. Nombre del producto\n{'=='*25}\nSeleccion:").strip()
-                campos_busqueda = {"1": "ID", "2": "Categoria", "3": "Nombre del producto"}
+                # campo = input(f"{'=='*25}\ningrese por que campo desea buscar: \n1. ID\n2. Categoria\n3. Nombre del producto\n{'=='*25}\nSeleccion:").strip()
+                campos_busqueda = {
+                    "1": "ID", "2": "Categoria", "3": "Nombre del producto"}
                 campo = sub_menu("Buscar producto", campos_busqueda)
                 if campo not in ("1", "2", "3"):
                     print("XXX--> Opción inválida. Intente nuevamente.<--XXX")
@@ -169,16 +185,18 @@ def main():
                 if campo == "1":
                     valor = input("Ingrese el ID del producto:  ").strip()
                     if not validar_entero_positivo(valor):
-                        print("XXXXX--> El ID debe ser un número entero positivo. <--XXXXXX")
+                        print(
+                            "XXXXX--> El ID debe ser un número entero positivo. <--XXXXXX")
                         pausa()
                         limpiar_pantalla()
                         continue
                     # si el campo es id, busco por id
-                    productos = busqueda_producto(db, tbl, "id", valor)   
+                    productos = busqueda_producto(db, tbl, "id", valor)
                 if campo == "2":
                     valor = input("Ingrese la Categoria:  ").strip()
                     if not validar_string(valor):
-                        print("XXXXX--> el tipo de categoria debe ser un texto no nulo. <--XXXXXX")
+                        print(
+                            "XXXXX--> el tipo de categoria debe ser un texto no nulo. <--XXXXXX")
                         pausa()
                         limpiar_pantalla()
                         continue
@@ -187,23 +205,26 @@ def main():
                 if campo == "3":
                     valor = input("Ingrese Nombre del producto:  ").strip()
                     if not validar_string(valor):
-                        print("XXXXX--> el nombre del producto debe ser un texto no nulo. <--XXXXXX")
+                        print(
+                            "XXXXX--> el nombre del producto debe ser un texto no nulo. <--XXXXXX")
                         pausa()
                         limpiar_pantalla()
                         continue
                     productos = busqueda_producto(db, tbl, "nombre", valor)
-                imprime_tabla(productos)  # imprimo la tabla de productos encontrados
+                # imprimo la tabla de productos encontrados
+                imprime_tabla(productos)
                 preferencia = input(
                     "Desea realizar una nueva busqueda (s/n)").strip().lower()
                 print("preferencia:", preferencia)
-                #limpiar_pantalla()  # No limpio la pantalla para mantener en ella busquedas anteriores.
+                # limpiar_pantalla()  # No limpio la pantalla para mantener en ella busquedas anteriores.
                 if preferencia != "s":
                     break
         # === OPCIÓN 6: Reporte de bajo stock ===
         elif menu_opcion == "6":
             while True:
                 # Solicito el limite de stock para el reporte
-                limite = input("Mostrar productos con stock menor o igual a: ").strip()
+                limite = input(
+                    "Mostrar productos con stock menor o igual a: ").strip()
                 # Valido que el limite sea un entero positivo
                 if validar_entero_positivo(limite):
                     # recibo los productos con stock bajo
@@ -212,8 +233,9 @@ def main():
                         # Si los tengo, imprimo la tabla de productos con stock bajo
                         imprime_tabla(productos)
                     else:
-                        print(f"No se encontraron productos con stock menor o igual a {limite}.")
-                    pausa() # pausa para que el usuario vea el reporte antes de limpiar pantalla
+                        print(
+                            f"No se encontraron productos con stock menor o igual a {limite}.")
+                    pausa()  # pausa para que el usuario vea el reporte antes de limpiar pantalla
                     # una ultima Pregunta si desea realizar una nueva busqueda
                     preferencia = input(
                         "Desea realizar una nueva busqueda (s/n)").strip().lower()
@@ -223,6 +245,7 @@ def main():
         # === OPCIÓN 0: Salir del programa ===
         elif menu_opcion == "0":
             print("Gracias por usar SiGePro - Sistema de Gestión de Productos.")
+            pausa()
 
 
 if __name__ == '__main__':  # Punto de entrada de la aplicación.

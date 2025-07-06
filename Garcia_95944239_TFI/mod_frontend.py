@@ -1,18 +1,23 @@
 import os
 
 # funcion para limpiar la pantalla
+
+
 def limpiar_pantalla():
     os.system('cls' if os.name == 'nt' else 'clear')
+
+# función para pausar la ejecución del programa
 
 
 def pausa():
     """Pausa la ejecución del programa y espera a que el usuario presione una tecla."""
     input("Presione Enter para continuar...")
-# funcion imprime el menu
+# funcion imprime el menu Principal del sistema de gestion de productos
+# y retorna la opcion elegida por el usuario
 
 
 def menu():
-    limpiar_pantalla() #llamo a la funcion que limpia la pantalla de la terminal
+    limpiar_pantalla()  # llamo a la funcion que limpia la pantalla de la terminal
     # imprimo el menu a mostrar
     print("=====-SiGePro - Menu del Sistema de Gestion de productos. =====")
     print("1. Registrar nuevo producto")
@@ -24,16 +29,21 @@ def menu():
     print("0. Para salir")
     print("======================================================")
     # tomo la opción del usuario y elimino espacios al inicio y final
-    opcion = input("Seleccione una opción: ").strip() 
+    opcion = input("Seleccione una opción: ").strip()
     # verifico y notifco a usuario si la obsion es erronea
-    if not opcion.isdigit() or int(opcion) not in range(0, 7): 
+    if not opcion.isdigit() or int(opcion) not in range(0, 7):
         print("XXXXXXXX  Opción no válida. Debe ser un número entre 0 y 6. XXXXXXXX")
         pausa()
-        return None # retorno None si la opcion no es valida no es obligatorio pero es una buena practica
+        return None  # retorno None si la opcion no es valida no es obligatorio pero es una buena practica
     return opcion
+
+# función para imprimir la tabla de productos Estructurada
 
 
 def imprime_tabla(productos):
+    if not productos:
+        print("No hay datos para mostrar.")
+        return
     # Encabezado de la tabla
     print("\n Lista de Productos Registrados")
     print("=" * 85 + "=" * 25)
@@ -43,6 +53,9 @@ def imprime_tabla(productos):
     for producto in productos:
         print(
             f"{producto[0]:<5} {producto[1]:<25} {producto[2]:<30} {producto[3]:<12} ${producto[4]:<15.2f} {producto[5]:<10} \n")
+
+# función para mostrar un submenú y retornar la opción elegida opciones como diccionario
+
 
 def sub_menu(titulo, opciones: dict):
     """
@@ -55,7 +68,7 @@ def sub_menu(titulo, opciones: dict):
         "2": "Ver todos los registros en db",
         "3": "Actualizar datos del producto por su ID",
         }
- 
+
     """
     while True:
         print("=" * 54)

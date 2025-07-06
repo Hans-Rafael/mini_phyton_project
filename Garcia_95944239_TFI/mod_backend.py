@@ -1,7 +1,7 @@
+#documentos formateados con autopep8
 import sqlite3
 
 # validar es un numero real(Float) no nulo menor a 999.999.999
-
 
 def validar_float_positivo(valor):
     """
@@ -24,7 +24,6 @@ def validar_string(txt) -> bool:
 
 # valida si es un entero positivo no nulo menor a 999999999
 
-
 def validar_entero_positivo(valor):
         try:
             dato = int(valor)
@@ -33,7 +32,6 @@ def validar_entero_positivo(valor):
             return False
            
 # funcion conecta a la database, si el data.db no existe lo crea.
-
 
 def conexion_db(data_base: str = "data.db") -> sqlite3.Connection:
     """Si el archivo existe, se conecta Y si no existe, lo crea vacío en el mismo directorio del script, y se conecta"""
@@ -45,7 +43,6 @@ def conexion_db(data_base: str = "data.db") -> sqlite3.Connection:
         print(f"Ocurrió un error al conectarse a la db: {e}")
         return None
 # Crear tabla en la base de datos si aun no existe!
-
 
 def crear_tabla_db(nombre_db, nombre_tabla, col1, col2, col3, col4, col5, col6):
     """Crea una tabla en la base de datos si no existe."""
@@ -133,25 +130,15 @@ def ver_registro_db(nombre_db,tabla):
         cursor = conexion.cursor()
         cursor.execute(f"SELECT * FROM {tabla}")
         productos = cursor.fetchall() # MI LISTA DE TUPLAS
+        # si no hay productos en la db imprimo una pantalla vacias para dar impresion de vista a la tabla
         if not productos:
             print("La base de datos está vacía.")
             print("=" * 90)
             print(f"ID: - | nombre: - | descripcion: - | cantidad: - | precio: - | categoria: - | \n")
             print("=" * 90)
             return
-        #de3vuelvo lo encontrado:
+        #devuelvo lo encontrado:
         return productos
-        #imprime lo encontrado:
-        #imprime_tabla(productos)
-        # #imprimo encabezado de la tabla
-        #  # Encabezado de la tabla
-        # print("\n📦 Lista de Productos Registrados")
-        # print("=" * 85 + "=" * 25)
-        # print(f"{'ID':>1} {'Nombre':>10} {'Descripción':>30} {'Cant':>20} {'Precio':>15} {'Categoría':>20}")
-        # print("=" * 85+ "=" * 25)
-        # #resto de la tabla
-        # for producto in productos:
-        #     print(f"{producto[0]:<5} {producto[1]:<25} {producto[2]:<30} {producto[3]:<12} ${producto[4]:<15.2f} {producto[5]:<10} \n")
     except(Exception) as e:
         print (f"ERROR al intentar ver el registro: {e}")
     # manejo del error
@@ -175,6 +162,8 @@ def actualizar_informacion(nombre_db,tabla,pk,campo,valor):
         if not conexion:
             return
         cursor = conexion.cursor()
+        # ejecuto comando de sql para actualizar el producto por su id
+        # uso ? para evitar inyeccion sql
         cursor.execute(f"UPDATE {tabla} SET {campo} = ? WHERE id = ?", (valor, pk))
         conexion.commit()  # guardo cambios en la db
         print(f"se an guardado exitosamente {valor}")
@@ -193,10 +182,13 @@ def borrar_producto(nombre_db, tabla, pk):
     if not validar_entero_positivo(pk):
         return
     try:
+        # realizo conexion a la db
         conexion = conexion_db(nombre_db)
         if not conexion:
             return
         cursor = conexion.cursor()
+        # ejecuto comando de sql para eliminar el producto por su id
+        # uso ? para evitar inyeccion sql
         cursor.execute(f"DELETE FROM {tabla} WHERE id= ?",(pk))
         conexion.commit()  # guardo cambios en la db
         print(f"Se elimino el produccto de id: #{pk}")
@@ -219,18 +211,19 @@ def busqueda_producto(db,tabla,campo,valor):
             if not validar_entero_positivo(valor):
                 print(f"El ID debe ser un numero entero positivo")
                 return
-            cursor.execute(f"SELECT * FROM {tabla} WHERE id= ?",(valor))
+            # ejecuto la consulta para buscar por id
+            cursor.execute(f"SELECT * FROM {tabla} WHERE id= ?",(valor,))
         else:
         #ejecuto la consulta para strings
             cursor.execute(f"SELECT * FROM {tabla} WHERE {campo} LIKE ? ORDER BY {campo} ASC",(valor+'%',))
         #me traigo toda las filas
         productos = cursor.fetchall() 
-        # for producto in productos:
-        #     print(f"ID: {producto[0]} nombre:{producto[1]}  descripcion:{producto[2]} cantidad:{producto[3]} unds. precio: ${producto[4]:.2f} categoria:{producto[5]} \n")
+        
         if not productos:
             print(f"el producto {valor} No se encuentra en la base de datos")
             return False
-        #imprime_tabla(productos)
+        #
+        #retorno los productos encontrados
         return productos
     except(Exception) as e:
         print(f"Error al busacar: {valor} : {e} ")
@@ -249,15 +242,14 @@ def reporte_bajo_stock(db, tabla, limite):
         if not conexion:
             return
         cursor = conexion.cursor()
-        cursor.execute(f"SELECT * FROM {tabla} WHERE cantidad <= ?",(limite))
+        # ejecuto la consulta para buscar productos con cantidad menor o igual al limite 
+        cursor.execute(f"SELECT * FROM {tabla} WHERE cantidad <= ?",(limite,))
         productos = cursor.fetchall()
         if not productos:
              print(f"No se encontraron productos con stock igual o menor a {limite}.")
         else:
+            #retorno la lista de tuplas de productos encontrados
             return productos
-            #imprime_tabla(productos)  # debe ser parte del front-end
-        # for producto in productos:
-        #     print(f"ID: {producto[0]} nombre:{producto[1]}  descripcion:{producto[2]} cantidad:{producto[3]} unds. precio: ${producto[4]:.2f} categoria:{producto[5]} \n")
     except(Exception) as e:
         print(f" Error al buscar productos con cantidad menor o igual a #{limite} : {e} ")
     finally:

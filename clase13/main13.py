@@ -91,6 +91,6 @@ try:
             break
     # cerrar conexion
     conection.close()
-    print("Feliz jornada!")
+    print("Feliz jornada!")#📦
 except (NameError, sqlite3.Error, Exception) as e:
     print(f"Ocurrió un error: {e}")

@@ -1,6 +1,6 @@
 # SiGePro - Sistema de Gestión de Productos
 
-**Versión**: 1.0.0  
+**Versión**: 1.0.1  
 **Autor**: Hans Garcia  
 **Licencia**: MIT
 

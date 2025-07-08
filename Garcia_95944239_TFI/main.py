@@ -22,7 +22,7 @@ def main():
     # Esta linea es para ubicar python en el directorio actual
     # Configuración inicial para el funcionamiento de la aplicación.
     os.chdir(os.path.dirname(__file__))
-    # declaro las variables
+    # declaro las variables base de datos y tabla
     db = 'data.db'
     tbl = 'productos'
     # Defino los campos requeridos para la tabla de productos
@@ -36,7 +36,7 @@ def main():
 }
     # Valido que los campos de la tabla sean correctos y creo la tabla si es correcto
     if validar_columnas_tabla(campos_producto):
-        crear_tabla_db("productos.db", "inventario", campos_producto)
+        crear_tabla_db(db, tbl, campos_producto)
     else:
         print("No se puede crear la tabla porque la estructura no es correcta.")
     menu_opcion = "" # Variable para controlar el menú principal

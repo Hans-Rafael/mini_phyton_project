@@ -47,29 +47,67 @@ def conexion_db(data_base: str = "data.db") -> sqlite3.Connection:
     except (Exception) as e:
         print(f"Ocurrió un error al conectarse a la db: {e}")
         return None
+# Función para validar si un nombre de los campos de la tabla es válido para este proyecto.
+def validar_columnas_tabla(columnas_dict):
+    """Valida que el diccionario de columnas tenga los campos necesarios para una tabla de productos."""
+    campos_requeridos = {
+        "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+        "nombre": "TEXT NOT NULL",
+        "descripcion": "TEXT",
+        "cantidad": "INTEGER NOT NULL",
+        "precio": "REAL NOT NULL",
+        "categoria": "TEXT"
+    }
+    # Valido que el argumento sea un diccionario
+    if not isinstance(columnas_dict, dict):
+        print("Error: Las columnas deben ser un diccionario.")
+        return False
+
+    # Valido que todas las claves requeridas estén presentes
+    claves_faltantes = set(campos_requeridos.keys()) - set(columnas_dict.keys())
+    if claves_faltantes:
+        print(f"Error: Faltan campos requeridos: {claves_faltantes}")
+        return False
+
+    # Valido que los tipos de datos coincidan exactamente
+    for campo, tipo in campos_requeridos.items():
+        if columnas_dict[campo].strip().upper() != tipo:
+            print(f"Error: El campo '{campo}' debe ser '{tipo}', pero se recibió '{columnas_dict[campo]}'")
+            return False
+
+    return True
 # Crear tabla en la base de datos si aun no existe!
-
-
-def crear_tabla_db(nombre_db, nombre_tabla, col1, col2, col3, col4, col5, col6):
+# converti entradas de crear_tabla_db(nombre_db, nombre_tabla, col1, col2, col3, col4, col5, col6):
+# a diccionario mas escalable y reutilizable.
+def crear_tabla_db(nombre_db, nombre_tabla, columnas_dict):
     """Crea una tabla en la base de datos si no existe."""
-    columnas = [col1, col2, col3, col4, col5, col6]
-    # paso los campos a mayusculas y gartantizo no espacios en blancos al final.
-    for i in range(len(columnas)):
-        columnas[i] = columnas[i].strip().upper()
-
-    # reviso no este repetido un valor en el array
-    if len(columnas) != len(set(columnas)):
-        print("Error: Los nombres de las columnas no pueden estar repetidos.")
+    #valido tipo de datos no reviso sea igual a 6 columnas para ser mas reutilizable hare funcion valide diccionario particular
+    if not isinstance(columnas_dict, dict) or len(columnas_dict) == 0:
+        print("Error: Debe proporcionar un diccionario con columnas.")
         return
-    # reviso que los nombres de las columnas o campos no sean nulos y sean strings
-    for nombre in columnas:
-        if not validar_string(nombre):
-            return
-    # valido que el nombre de la tabla sea un string no nulo
+    #valida nombre de tabla
     if not validar_string(nombre_tabla):
         return
-
-    # Operación con conexión protegida
+    columnas_limpias={}
+    # paso los campos a mayusculas y gartantizo no espacios en blancos al final.
+    for nombre, tipo in columnas_dict.items():
+        nombre_limpio = nombre.strip().upper()
+        tipo_limpio = tipo.strip().upper()
+        # valido que el nombre de la columna sea un string no nulo
+        if not validar_string(nombre_limpio) or not validar_string(tipo_limpio):
+            return
+        columnas_limpias[nombre_limpio] = tipo_limpio
+         # Verificar que no haya nombres de columnas repetidos
+    if len(columnas_limpias) != len(set(columnas_limpias)):
+        print("Error: Los nombres de columnas no pueden repetirse.")
+        return
+    # Armo la parte del SQL con columnas y tipos
+    partes_columnas = []
+    for nombre, tipo in columnas_limpias.items():
+        partes_columnas.append(f"{nombre} {tipo}")
+    
+    columnas_sql = ", ".join(partes_columnas)
+   
     try:
         # realizo conexion a la db
         conexion = conexion_db(nombre_db)
@@ -77,16 +115,7 @@ def crear_tabla_db(nombre_db, nombre_tabla, col1, col2, col3, col4, col5, col6):
             return
         cursor = conexion.cursor()
         # Ejecuto la consulta para crear la tabla si no existe
-        cursor.execute(f"""
-            CREATE TABLE IF NOT EXISTS {nombre_tabla} (
-                {col1} INTEGER PRIMARY KEY AUTOINCREMENT,
-                {col2} TEXT NOT NULL,
-                {col3} TEXT,
-                {col4} INTEGER NOT NULL,
-                {col5} REAL NOT NULL,
-                {col6} TEXT
-            )
-        """)
+        cursor.execute(f""" CREATE TABLE IF NOT EXISTS {nombre_tabla} ( {columnas_sql} ) """)
         # Confirma los cambios y los hace permanentes.
         conexion.commit()
         print(f"Tabla '{nombre_tabla}' creada o ya existente.")
@@ -95,39 +124,42 @@ def crear_tabla_db(nombre_db, nombre_tabla, col1, col2, col3, col4, col5, col6):
     finally:
         conexion.close()
 
-# 1 Registrar nuevo producto en la db
+# 1 Registrar nuevo producto en la db ahora con diccionario de campos.
+def registrar_producto(nombre_db, nombre_tabla, campos_dict):
+    """Inserta un producto usando un diccionario {columna: valor}."""
 
+    if not isinstance(campos_dict, dict) or not campos_dict:
+        print("Error: campos_dict debe ser un diccionario no vacío.")
+        return
 
-def registrar_producto(nombre_db, nombre_tabla, campo1_str, campo2_str, cantidad, precio, campo3_str):
-    array_string = [campo1_str, campo2_str, campo3_str]
-    # valido entradas.
-    if not validar_float_positivo(precio):
-        print("Precio no válido")
+    if not validar_string(nombre_db) or not validar_string(nombre_tabla):
         return
-    if not validar_entero_positivo(cantidad):
-        print("Cantidad no válida")
-        return
-    for name in array_string:
-        if not validar_string(name):
-            print(f"Valor inválido: {name}")
-            return
+
+    columnas = list(campos_dict.keys())     # ["nombre", "descripcion", ...]
+    valores = list(campos_dict.values())    # ["Lapicera", "Tinta azul", ...]
+    
+    #
+    columnas_sql = ", ".join(columnas)# "nombre, descripcion, cantidad, precio, categoria"
+    valores_sql = ", ".join(["?"] * len(columnas)) # "?, ?, ?, ?, ?"
+
     try:
-        cantidad = int(cantidad)  # paso entrada a integer
-        precio = float(precio)   # convierto entrada en float
-        conexion = sqlite3.connect(nombre_db)
+        conexion = conexion_db(nombre_db)
+        if not conexion:
+            return
         cursor = conexion.cursor()
-        # ejecuto comando de sql para inyectar o insertar de forma segura mediante tuplas.
-        cursor.execute(f"""INSERT INTO {nombre_tabla} (nombre, descripcion, cantidad, precio, categoria)
-         VALUES (?, ?, ?, ?, ?)
-         """, (campo1_str, campo2_str, cantidad, precio, campo3_str))
-        conexion.commit()  # guardo cambios en la db
-        print(
-            f"producto {campo1_str} de la categoria {campo3_str} agregado exitosamente")
-    except (Exception) as e:
-        print(f"ERROR al registrar producto:{e}")
-        # conexion.rollback()  # ← DESHACE si falló antes del commit
+        #
+        cursor.execute(
+            f"INSERT INTO {nombre_tabla} ({columnas_sql}) VALUES ({valores_sql})",
+            tuple(valores)
+        )
+        conexion.commit()
+        print(f"Producto '{campos_dict.get('nombre', '')}' insertado con éxito.")
+    except Exception as e:
+        print(f"Error al registrar producto: {e}")
     finally:
-        conexion.close()  # libero recursos
+        conexion.close()
+
+
 # 2 ver todos los productos en db:
 
 
@@ -172,7 +204,8 @@ def actualizar_informacion(nombre_db, tabla, pk, campo, valor):
     if not validar_string(tabla):
         return
     try:
-        conexion = sqlite3.connect(nombre_db)
+        # realizo conexion a la db
+        conexion = conexion_db(nombre_db)
         if not conexion:
             return
         cursor = conexion.cursor()
@@ -221,17 +254,17 @@ def busqueda_producto(db, tabla, campo, valor):
     if not validar_string(db) or not validar_string(tabla) or not validar_string(campo):
         return
     try:
-        conexion = conexion_db(db)
+        conexion = conexion_db(db)  ### 
         if not conexion:
             return
-        cursor = conexion.cursor()
+        cursor = conexion.cursor() #####
         # busco por id primero
         if campo == "id":
             if not validar_entero_positivo(valor):
                 print(f"El ID debe ser un numero entero positivo")
                 return
             # ejecuto la consulta para buscar por id
-            cursor.execute(f"SELECT * FROM {tabla} WHERE id= ?", (valor,))
+            cursor.execute(f"SELECT * FROM {tabla} WHERE {campo}= ?", (valor,))
         else:
             # ejecuto la consulta para strings
             cursor.execute(

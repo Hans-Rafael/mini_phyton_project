@@ -12,6 +12,7 @@ from mod_backend import (
     borrar_producto,
     busqueda_producto,
     reporte_bajo_stock,
+    validar_columnas_tabla
 )
 
 from mod_frontend import menu, imprime_tabla, pausa, limpiar_pantalla, sub_menu
@@ -24,10 +25,21 @@ def main():
     # declaro las variables
     db = 'data.db'
     tbl = 'productos'
-    # creo la database (data.db) con una tabla (productos) y los campos requeridos
-    crear_tabla_db(db, tbl, 'id', 'nombre', 'descripcion',
-                   'cantidad', 'precio', 'categoria')
-    menu_opcion = ""
+    # Defino los campos requeridos para la tabla de productos
+    campos_producto = {
+    "id": "INTEGER PRIMARY KEY AUTOINCREMENT",
+    "nombre": "TEXT NOT NULL",
+    "descripcion": "TEXT",
+    "cantidad": "INTEGER NOT NULL",
+    "precio": "REAL NOT NULL",
+    "categoria": "TEXT"
+}
+    # Valido que los campos de la tabla sean correctos y creo la tabla si es correcto
+    if validar_columnas_tabla(campos_producto):
+        crear_tabla_db("productos.db", "inventario", campos_producto)
+    else:
+        print("No se puede crear la tabla porque la estructura no es correcta.")
+    menu_opcion = "" # Variable para controlar el menú principal
     while menu_opcion != "0":
         menu_opcion = menu()
         # === OPCIÓN 1: Registrar nuevo producto ===
@@ -62,8 +74,15 @@ def main():
                         break
                     print(
                         "recuerda no debe estar vacio y ser menos a 50 caracteres, trata de nuevo")
-                registrar_producto(db, tbl, nombre, descripcion,
-                                   cantidad, precio, categoria)
+                # Armado del diccionario con los datos validados
+                campos = {
+                    "nombre": nombre,
+                    "descripcion": descripcion,
+                    "cantidad": cantidad,
+                    "precio": precio,
+                    "categoria": categoria
+                }
+                registrar_producto(db, tbl, campos)
                 print("Producto registrado correctamente.")
                 respuesta = input(
                     "desea registrar otro producto (s/n): ").strip().lower()
